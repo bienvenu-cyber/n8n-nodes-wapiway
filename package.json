@@ -22,12 +22,13 @@
   },
   "main": "index.js",
   "scripts": {
-    "build": "tsc && cp nodes/WapiWay/wapiway.svg dist/nodes/WapiWay/",
+    "build": "tsc && cp nodes/WapiWay/wapiway.svg dist/nodes/WapiWay/ && cp nodes/WapiWayTrigger/wapiway.svg dist/nodes/WapiWayTrigger/",
     "prepublishOnly": "npm run build"
   },
   "files": [
     "dist",
-    "nodes/**/wapiway.svg"
+    "nodes/WapiWay/wapiway.svg",
+    "nodes/WapiWayTrigger/wapiway.svg"
   ],
   "n8n": {
     "n8nNodesApiVersion": 1,
@@ -35,7 +36,8 @@
       "dist/credentials/WapiWayApi.credentials.js"
     ],
     "nodes": [
-      "dist/nodes/WapiWay/WapiWay.node.js"
+      "dist/nodes/WapiWay/WapiWay.node.js",
+      "dist/nodes/WapiWayTrigger/WapiWayTrigger.node.js"
     ]
   },
   "devDependencies": {
