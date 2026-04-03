@@ -108,15 +108,15 @@ export class WapiWayTrigger implements INodeType {
 				const credentials = await this.getCredentials('wapiWayApi');
 
 				const options = {
-					method: 'POST',
+					method: 'POST' as const,
 					headers: {
 						'Authorization': `Bearer ${credentials.apiKey}`,
 						'Content-Type': 'application/json',
 					},
-					body: JSON.stringify({
+					body: {
 						url: webhookUrl,
 						events: events,
-					}),
+					},
 					uri: 'https://api.wapiway.tech/api/public/webhooks',
 					json: true,
 				};
@@ -129,14 +129,14 @@ export class WapiWayTrigger implements INodeType {
 				const credentials = await this.getCredentials('wapiWayApi');
 
 				const options = {
-					method: 'DELETE',
+					method: 'DELETE' as const,
 					headers: {
 						'Authorization': `Bearer ${credentials.apiKey}`,
 						'Content-Type': 'application/json',
 					},
-					body: JSON.stringify({
+					body: {
 						url: webhookUrl,
-					}),
+					},
 					uri: 'https://api.wapiway.tech/api/public/webhooks',
 					json: true,
 				};

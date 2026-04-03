@@ -107,10 +107,10 @@ class WapiWayTrigger {
                             'Authorization': `Bearer ${credentials.apiKey}`,
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({
+                        body: {
                             url: webhookUrl,
                             events: events,
-                        }),
+                        },
                         uri: 'https://api.wapiway.tech/api/public/webhooks',
                         json: true,
                     };
@@ -126,9 +126,9 @@ class WapiWayTrigger {
                             'Authorization': `Bearer ${credentials.apiKey}`,
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({
+                        body: {
                             url: webhookUrl,
-                        }),
+                        },
                         uri: 'https://api.wapiway.tech/api/public/webhooks',
                         json: true,
                     };
