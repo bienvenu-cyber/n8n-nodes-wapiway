@@ -41,8 +41,9 @@
     ]
   },
   "devDependencies": {
-    "typescript": "^5.0.0",
-    "n8n-workflow": "^1.0.0"
+    "@types/node": "^25.5.2",
+    "n8n-workflow": "^1.0.0",
+    "typescript": "^5.0.0"
   },
   "peerDependencies": {
     "n8n-workflow": ">=1.0.0"

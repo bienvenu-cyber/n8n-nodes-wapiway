@@ -171,9 +171,8 @@ export class WapiWayTrigger implements INodeType {
 			const body = JSON.stringify(bodyData);
 			
 			// Verify HMAC-SHA256 signature
-			const crypto = require('crypto');
-			const expectedSignature = 'sha256=' + crypto
-				.createHmac('sha256', webhookSecret)
+			const { createHmac } = await import('crypto');
+			const expectedSignature = 'sha256=' + createHmac('sha256', webhookSecret)
 				.update(body)
 				.digest('hex');
 			
