@@ -41,10 +41,6 @@ class WapiWay {
                             name: 'Contact',
                             value: 'contact',
                         },
-                        {
-                            name: 'Conversation',
-                            value: 'conversation',
-                        },
                     ],
                     default: 'message',
                 },
@@ -424,8 +420,8 @@ class WapiWay {
                             qs,
                             json: true,
                         });
-                        const sessions = response.data;
-                        returnData.push(...sessions);
+                        const data = Array.isArray(response === null || response === void 0 ? void 0 : response.data) ? response.data : [];
+                        returnData.push(...data);
                     }
                     else if (operation === 'get') {
                         const sessionId = this.getNodeParameter('sessionId', i);
@@ -450,8 +446,8 @@ class WapiWay {
                             qs,
                             json: true,
                         });
-                        const contacts = response.data;
-                        returnData.push(...contacts);
+                        const data = Array.isArray(response === null || response === void 0 ? void 0 : response.data) ? response.data : [];
+                        returnData.push(...data);
                     }
                     else if (operation === 'get') {
                         const contactId = this.getNodeParameter('contactId', i);

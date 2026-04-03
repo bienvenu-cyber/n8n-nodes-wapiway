@@ -100,46 +100,36 @@ class WapiWayTrigger {
                 async create() {
                     const webhookUrl = this.getNodeWebhookUrl('default');
                     const events = this.getNodeParameter('events');
-                    const credentials = await this.getCredentials('wapiWayApi');
-                    const options = {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': `Bearer ${credentials.apiKey}`,
-                            'Content-Type': 'application/json',
-                        },
-                        body: {
-                            name: 'n8n Webhook',
-                            target_url: webhookUrl,
-                            subscribed_events: events,
-                        },
-                        uri: 'https://api.wapiway.tech/api/public/webhooks',
-                        json: true,
+                    const body = {
+                        name: 'n8n Webhook',
+                        target_url: webhookUrl,
+                        subscribed_events: events,
                     };
-                    const response = await this.helpers.request(options);
-                    // Store webhook ID for deletion
+                    const response = await this.helpers.httpRequestWithAuthentication.call(this, 'wapiWayApi', {
+                        method: 'POST',
+                        url: 'https://api.wapiway.tech/api/public/webhooks',
+                        body,
+                        json: true,
+                    });
+                    // Store webhook ID and secret for deletion and validation
                     const webhookData = this.getWorkflowStaticData('node');
                     webhookData.webhookId = response.id;
+                    webhookData.webhookSecret = response.secret;
                     return true;
                 },
                 async delete() {
-                    const webhookUrl = this.getNodeWebhookUrl('default');
-                    const credentials = await this.getCredentials('wapiWayApi');
                     // Get webhook ID first
                     const webhookData = this.getWorkflowStaticData('node');
                     const webhookId = webhookData.webhookId;
                     if (!webhookId) {
                         return true;
                     }
-                    const options = {
-                        method: 'DELETE',
-                        headers: {
-                            'Authorization': `Bearer ${credentials.apiKey}`,
-                        },
-                        uri: `https://api.wapiway.tech/api/public/webhooks/${webhookId}`,
-                        json: true,
-                    };
                     try {
-                        await this.helpers.request(options);
+                        await this.helpers.httpRequestWithAuthentication.call(this, 'wapiWayApi', {
+                            method: 'DELETE',
+                            url: `https://api.wapiway.tech/api/public/webhooks/${webhookId}`,
+                            json: true,
+                        });
                     }
                     catch (error) {
                         return false;
@@ -150,8 +140,28 @@ class WapiWayTrigger {
         };
     }
     async webhook() {
+        const req = this.getRequestObject();
         const bodyData = this.getBodyData();
         const events = this.getNodeParameter('events');
+        // Verify webhook signature
+        const webhookData = this.getWorkflowStaticData('node');
+        const webhookSecret = webhookData.webhookSecret;
+        if (webhookSecret) {
+            const signature = req.headers['x-webhook-signature'];
+            const body = JSON.stringify(bodyData);
+            // Verify HMAC-SHA256 signature
+            const crypto = require('crypto');
+            const expectedSignature = 'sha256=' + crypto
+                .createHmac('sha256', webhookSecret)
+                .update(body)
+                .digest('hex');
+            if (signature !== expectedSignature) {
+                // Invalid signature - reject webhook
+                return {
+                    workflowData: [],
+                };
+            }
+        }
         // Check if the event type matches what we're listening for
         const eventType = bodyData.event;
         if (events.length > 0 && !events.includes(eventType)) {

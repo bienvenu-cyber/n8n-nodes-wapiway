@@ -46,10 +46,6 @@ export class WapiWay implements INodeType {
             name: 'Contact',
             value: 'contact',
           },
-          {
-            name: 'Conversation',
-            value: 'conversation',
-          },
         ],
         default: 'message',
       },
@@ -463,8 +459,8 @@ export class WapiWay implements INodeType {
               },
             );
 
-            const sessions = (response as IDataObject).data as IDataObject[];
-            returnData.push(...sessions);
+            const data = Array.isArray(response?.data) ? response.data : [];
+            returnData.push(...data);
           } else if (operation === 'get') {
             const sessionId = this.getNodeParameter('sessionId', i) as string;
 
@@ -500,8 +496,8 @@ export class WapiWay implements INodeType {
               },
             );
 
-            const contacts = (response as IDataObject).data as IDataObject[];
-            returnData.push(...contacts);
+            const data = Array.isArray(response?.data) ? response.data : [];
+            returnData.push(...data);
           } else if (operation === 'get') {
             const contactId = this.getNodeParameter('contactId', i) as string;
 
