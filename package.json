@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-wapiway",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "n8n community node for WapiWay WhatsApp Business API",
   "keywords": [
     "n8n-community-node-package",
