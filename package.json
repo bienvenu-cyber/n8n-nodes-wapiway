@@ -1,0 +1,48 @@
+{
+  "name": "n8n-nodes-wapiway",
+  "version": "1.0.3",
+  "description": "n8n community node for WapiWay WhatsApp Business API",
+  "keywords": [
+    "n8n-community-node-package",
+    "whatsapp",
+    "messaging",
+    "automation",
+    "api",
+    "business"
+  ],
+  "license": "MIT",
+  "homepage": "https://www.wapiway.tech",
+  "author": {
+    "name": "WapiWay",
+    "email": "support@wapiway.tech"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wapiway/n8n-nodes-wapiway.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc && cp nodes/WapiWay/wapiway.svg dist/nodes/WapiWay/",
+    "prepublishOnly": "npm run build"
+  },
+  "files": [
+    "dist",
+    "nodes/**/wapiway.svg"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [
+      "dist/credentials/WapiWayApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/WapiWay/WapiWay.node.js"
+    ]
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "n8n-workflow": "^1.0.0"
+  },
+  "peerDependencies": {
+    "n8n-workflow": ">=1.0.0"
+  }
+}
