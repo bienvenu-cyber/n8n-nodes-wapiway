@@ -108,28 +108,34 @@ class WapiWayTrigger {
                             'Content-Type': 'application/json',
                         },
                         body: {
-                            url: webhookUrl,
-                            events: events,
+                            name: 'n8n Webhook',
+                            target_url: webhookUrl,
+                            subscribed_events: events,
                         },
                         uri: 'https://api.wapiway.tech/api/public/webhooks',
                         json: true,
                     };
-                    await this.helpers.request(options);
+                    const response = await this.helpers.request(options);
+                    // Store webhook ID for deletion
+                    const webhookData = this.getWorkflowStaticData('node');
+                    webhookData.webhookId = response.id;
                     return true;
                 },
                 async delete() {
                     const webhookUrl = this.getNodeWebhookUrl('default');
                     const credentials = await this.getCredentials('wapiWayApi');
+                    // Get webhook ID first
+                    const webhookData = this.getWorkflowStaticData('node');
+                    const webhookId = webhookData.webhookId;
+                    if (!webhookId) {
+                        return true;
+                    }
                     const options = {
                         method: 'DELETE',
                         headers: {
                             'Authorization': `Bearer ${credentials.apiKey}`,
-                            'Content-Type': 'application/json',
                         },
-                        body: {
-                            url: webhookUrl,
-                        },
-                        uri: 'https://api.wapiway.tech/api/public/webhooks',
+                        uri: `https://api.wapiway.tech/api/public/webhooks/${webhookId}`,
                         json: true,
                     };
                     try {
